@@ -1,0 +1,245 @@
+#!/bin/bash
+
+STATIONS=`basename $1`
+URLS=`basename $2`
+PATTERNS=`basename $3`
+PLOT_STYLE=$4
+DATE_RANGE_MIN=$5
+DATE_RANGE_MAX=$6
+PLOT_OPTION=$7
+SW_DIR=/usr/bin
+
+export VO_NAME=$(voms-proxy-info -vo)
+export VO_VARNAME=$(echo $VO_NAME | sed s/"\."/"_"/g | sed s/"-"/"_"/g | awk '{ print toupper($1) }')
+export VO_SWPATH_NAME="VO_"$VO_VARNAME"_SW_DIR"
+export VO_SWPATH_CONTENT=$(echo $VO_SWPATH_NAME | awk '{ cmd=sprintf("echo $%s",$1); system(cmd); }')
+
+printf "\n[ SETTINGS ] "
+printf "\n-----------------------------------------"
+printf "\nVO_NAME           : "${VO_NAME}
+printf "\nVO_VARNAME        : "${VO_VARNAME}
+printf "\nVO_SWPATH_NAME    : "${VO_SWPATH_NAME}
+printf "\nVO_SWPATH_CONTENT : "${VO_SWPATH_CONTENT}
+printf "\nPROXY             : "${X509_USER_PROXY}
+printf "\n-----------------------------------------"
+printf "\nSTATIONS 	  : "${STATIONS}
+printf "\nURLS 		  : "${URLS}
+printf "\nPATTERNS 	  : "${PATTERNS}
+printf "\nPLOT_STYLE   	  : "${PLOT_STYLE}
+printf "\nFROM              : "${DATE_RANGE_MIN}
+printf "\nTO                : "${DATE_RANGE_MAX}
+printf "\nPLOT OPTION       : "${PLOT_OPTION}
+printf "\n-----------------------------------------"
+
+printf "\n\n[ STARTING ] the Data Repository Visualization of the TRODAN Station(s)"
+printf "\n~ Running host: "`hostname -f`
+printf "\n[ CHECHING gnuplot installation ... ]\n"
+gnuplot -V
+if [ $? -eq 1 ] ; then
+printf "\n[ ABORTING! gnuplot is not installed ... ]\n"
+exit
+fi
+
+printf "\n"
+ls -al
+
+rm -rf *.csv 2>/dev/null >/dev/null
+
+for _station in `cat ${STATIONS}`
+do
+        for cvs in `cat ${URLS} | grep -i ${_station}`
+        do
+                printf "\n~ Downloading the CVS [ ${cvs} ] file from repo"
+                printf "\n~ This operation may take few minutes. Please wait ...\n"
+                # Stripping the front/rear chars
+                _file=`echo ${cvs} | awk -F'"' '{print $2}'`
+		gsiftp=`echo ${_file} | awk -F'https://' '{print $2}'`
+                _gsiftp="gsiftp://"${gsiftp}
+                _filename=`echo $gsiftp | awk -F'/' '{print $NF}'`
+                globus-url-copy ${_gsiftp} file:`pwd`/${_filename}
+        
+                if [ $? -eq 0 ] ; then
+                        # Skipping header of the cvs file
+                        cat "`basename ${_file}`" | grep -v "TOA5" \
+                               | grep -v "TIMESTAMP" \
+                               | grep -v "TS;RN" \
+                               | grep -v "^;;" > ./tmp
+
+                        mv ./tmp `basename ${_file}`
+                        dos2unix `basename ${_file}`
+                fi
+        done
+done
+
+printf "\n[ CHECHING CSV file(s) ... ]\n"
+ls -l *.csv
+
+printf "\n[ CHECHING CSV file(s) content ... ]\n"
+head -n 10 *.csv
+
+if [ "X${PLOT_OPTION}" == "Xdiurnal" ] ; then
+	echo;echo "Average Type Selected ==> [ DIURNAL ]"
+	echo "Processing CSV files in progress. This operation may takes time. Please wait!"
+	tar zxf sqlite.tar.gz 2>/dev/null
+
+	for _csv in `ls *.csv`
+        do
+                echo "Processing the file [ ${_csv} ] "
+                rm -f trodan.db 2>/dev/null
+                rm -f out.csv 2>/dev/null
+
+                python trodan_CSVdataParsing.py --db trodan.db --std ${_csv}.txt --csv ${_csv} --avg diurnal --out out.csv
+                mv out.csv ${_csv}
+        done
+fi
+
+if [ "X${PLOT_OPTION}" == "Xdaily" ] ; then
+	echo;echo "Average Type Selected ==> [ DAILY ]"
+	echo "Processing CSV files in progress. This operation may takes time. Please wait!"
+	tar zxf sqlite.tar.gz 2>/dev/null
+
+	for _csv in `ls *.csv`
+        do
+                echo "Processing the file [ ${_csv} ] "
+		rm -f trodan.db 2>/dev/null
+		rm -f out.csv 2>/dev/null
+
+		python trodan_CSVdataParsing.py --db trodan.db --std ${_csv}.txt --csv ${_csv} --avg daily --out out.csv
+		mv out.csv ${_csv}
+        done
+fi
+
+if [ "X${PLOT_OPTION}" == "Xmonthly" ] ; then
+	echo;echo "Average Type Selected ==> [ MONTHLY ]"
+	echo "Processing CSV files in progress. This operation may takes time. Please wait!"
+	tar zxf sqlite.tar.gz 2>/dev/null
+
+	for _csv in `ls *.csv`
+        do
+                echo "Processing the file [ ${_csv} ] "
+                rm -f trodan.db 2>/dev/null
+                rm -f out.csv 2>/dev/null
+
+                python trodan_CSVdataParsing.py --db trodan.db --std ${_csv}.txt --csv ${_csv} --avg monthly --out out.csv
+                mv out.csv ${_csv}
+        done
+fi
+
+printf "\n~ Processing the TRODAN Metereological Data with [ G N U P L O T ]"
+printf "\n~ The processing may take a long time to finish. Please wait!"
+rm -f *.ps 2>/dev/null >/dev/null
+rm -f *.pdf 2>/dev/null >/dev/null
+
+# Define the array with the column labels
+column[3]='Batt_Volt_Min';column[4]='Rain Precipitation'
+column[5]='Solar Radiation';column[6]='Air Temperature'
+column[7]='Relative Humidity';column[8]='Soil Temperature'
+column[9]='Wind Speed';column[10]='Wind Dir'
+column[11]='Barometric Pressure';column[12]='Volumetric Water';column[13]='PA_uS'
+
+for COLUMN in `cat ${PATTERNS}`
+do
+        unset plot
+	unset y_label
+        for file in $(echo *.csv)
+        do
+                station=`echo ${file} | awk -F'_' '{print $NR}'`
+		if [ "${COLUMN}" = "5" ] ; then
+                        plot+="\"$file\" using 1:${COLUMN} title \"[${station}]\" with ${PLOT_STYLE}, "
+                else
+                        plot+="\"$file\" using 1:${COLUMN} title \"[${station}]\" smooth csplines with ${PLOT_STYLE}, "
+                fi
+        done
+
+	if [ "${COLUMN}" = "3" ] ; then  ylabel="[Volt]"; fi
+        if [ "${COLUMN}" = "4" ] ; then  ylabel="[mm]"; fi
+        if [ "${COLUMN}" = "5" ] ; then  ylabel="[W/m^2]"; fi
+        if [ "${COLUMN}" = "6" ] ; then  ylabel='[{/Symbol \260} C]'; fi
+        if [ "${COLUMN}" = "7" ] ; then  ylabel="[%]"; fi
+        if [ "${COLUMN}" = "8" ] ; then  ylabel='[{/Symbol \260} C]'; fi
+        if [ "${COLUMN}" = "9" ] ; then  ylabel="[m/s]"; fi
+        if [ "${COLUMN}" = "10" ] ; then ylabel='[{/Symbol \260}]'; fi
+        if [ "${COLUMN}" = "11" ] ; then ylabel="[mbar]"; fi
+        if [ "${COLUMN}" = "12" ] ; then ylabel="[*100]"; fi
+	if [ "${COLUMN}" = "13" ] ; then ylabel='[{/Symbol m}s]'; fi
+
+        # Splitting the last char
+        plot=`echo $plot | sed s/.$//`
+        # Trim the title of the graph
+        _outputfile=`echo ${column[COLUMN]} | tr -d ' '`
+        _title=`echo ${column[COLUMN]} | tr -d ' '`
+	if [ "X${PLOT_OPTION}" == "Xdiurnal" ] ; then
+		_title+=" [ Diurnal ]"
+	fi
+
+	if [ "X${PLOT_OPTION}" == "Xdaily" ] ; then
+		_title+=" [ Daily ]"
+	fi
+	
+	if [ "X${PLOT_OPTION}" == "Xmonthly" ] ; then
+		_title+=" [ Monthly ]"
+	fi
+
+printf "\n~ Plotting data in progress. Please wait!"
+${SW_DIR}/gnuplot<<EOF
+set title "${_title}"
+set xlabel 'Date/Time'
+set ylabel "${ylabel}"
+set key below # Add the legend at the botton of the plot
+
+set style data ${PLOT_STYLE}
+set terminal postscript color solid enhanced "Helvetica" 14
+set grid
+
+set format x "%H:%M\n%d/%m/%y"
+set timefmt "%d/%m/%Y %H:%M"
+set xdata time
+set xrange["${DATE_RANGE_MIN} 00:00":"${DATE_RANGE_MAX} 00:00"]
+set ytics autofreq
+set mytics 6
+
+set output "${_outputfile}.ps"
+set datafile separator ';' #csv file
+plot ${plot}
+quit
+EOF
+
+# Check results
+if [ -e "${_outputfile}.ps" ] && [ -s "${_outputfile}.ps" ] ; then
+        printf " [DONE] The plot file has been successfully created!"
+        printf "\n~ See details =>"
+        printf " "
+        printf "Size $(stat -c%s "${_outputfile}.ps") KB, "
+        file "${_outputfile}.ps"
+        ps2pdf "${_outputfile}.ps"
+else
+        printf " [FAILURE] Some problems occurred during graph creation.\n"
+fi
+
+done
+
+printf "\n[ CHECHING for result(s) ... ]\n"
+tree -L 3  $PWD/
+
+tar zcf results.tar.gz *.pdf
+
+cat <<EOF >> output.README
+#
+# README - TRODAN Data Repository Visualization
+#
+# Giuseppe LA ROCCA, INFN Catania
+# <mailto:giuseppe.larocca@ct.infn.it>
+#
+
+The Center for Atmospheric Research (CAR) is an activity Centre of the Nigerian National Space Research and Development Agency, 
+NASRDA, committed to research and capacity building in the atmospheric and related sciences.
+Tropospheric Data Acquisition Network, TRODAN, is a project that was designed to monitor the lower atmosphere which covers region 
+from the surface of the Earth to the altitude of about 11 km. 
+This project is designed to collect and provide real-time meteorological data from different locations across Nigeria using for 
+the purpose of research and development. 
+
+If the job has been successfully executed, the following files will be produced:
+~ std.txt:              the standard output file;
+~ std.err:              the standard error file;
+~ results.tar.gz:       a tarball containing results.
+EOF
