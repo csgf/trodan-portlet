@@ -125,9 +125,19 @@ Each simulation will produce:
 
 - *std.err*: the standard error file;
 
-A graphical representation ofthe Meteorological Patters generated with GNUPLOT_ in PDF format.
+A graphical representation of the following Meteorological Patters:
 
-Some typical results are shown below:
+- Air/Soil Temperature, 
+
+- Rain Precipitation, 
+
+- Relative Humidity, 
+
+- Solar Radiation,
+
+- Wind Speed 
+
+of 4 different meteorological stations generated with GNUPLOT_ in PDF format are shown below:
 
 .. _AirTemperature: results/AirTemperature.pdf
 .. _RainPrecipitation: results/RainPrecipitation.pdf
