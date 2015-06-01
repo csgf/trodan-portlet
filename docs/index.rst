@@ -148,6 +148,8 @@ Some typical results are shown below:
 
 - WindSpeed_
 
+here is a pdf file :download:`pdf <results/WindSpeed.pdf>`
+
 ============
 Support
 ============
