@@ -129,6 +129,9 @@ A graphical representation ofthe Meteorological Patters generated with GNUPLOT_ 
 
 Some typical results are shown below:
 
+.. image:: patterns/AirTemperature.pdf
+      :align: center
+
 .. _AirTemperature: patterns/AirTemperature.pdf
 .. _RainPrecipitation: patterns/RainPrecipitation.pdf
 .. _RelativeHumidity: patterns/RelativeHumidity.pdf
