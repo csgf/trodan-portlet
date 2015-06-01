@@ -136,7 +136,7 @@ Some typical results are shown below:
 .. _SolarRadiation: patterns/SolarRadiation.pdf
 .. _WindSpeed: patterns/WindSpeed.pdf
 
-- :download:`Air Temperature` </patterns/AirTemperature.pdf>
+- :download:`Air Temperature` <patterns/AirTemperature.pdf>
 
 - RainPrecipitation_
 
