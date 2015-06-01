@@ -129,17 +129,14 @@ A graphical representation ofthe Meteorological Patters generated with GNUPLOT_ 
 
 Some typical results are shown below:
 
-.. image:: patterns/AirTemperature.pdf
-      :align: center
+.. _AirTemperature: results/AirTemperature.pdf
+.. _RainPrecipitation: results/RainPrecipitation.pdf
+.. _RelativeHumidity: results/RelativeHumidity.pdf
+.. _SoilTemperature: resultns/SoilTemperature.pdf
+.. _SolarRadiation: results/SolarRadiation.pdf
+.. _WindSpeed: results/WindSpeed.pdf
 
-.. _AirTemperature: patterns/AirTemperature.pdf
-.. _RainPrecipitation: patterns/RainPrecipitation.pdf
-.. _RelativeHumidity: patterns/RelativeHumidity.pdf
-.. _SoilTemperature: patterns/SoilTemperature.pdf
-.. _SolarRadiation: patterns/SolarRadiation.pdf
-.. _WindSpeed: patterns/WindSpeed.pdf
-
-:download:`Air Temperature <AirTemperature.pdf>`
+- AirTemperature_
 
 - RainPrecipitation_
 
