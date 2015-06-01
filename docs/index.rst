@@ -106,7 +106,7 @@ To run the PoC the user has to click on the *third* accordion of the portlet and
 
 - select the Meteorological station(s) to analyze as shown in the below figure:
 
-.. image:: images/TRODAN_inputs1.jpg
+.. image:: images/TRODAN_input1.jpg
       :align: center
 
 - select the Meteorological Pattern(s) to analyze as shown in the below figure:
