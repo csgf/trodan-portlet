@@ -14,7 +14,8 @@ About
 .. _CAR: http://www.carnasrda.com/
 .. _NASRDA: http://nasrda.gov.ng/en/portal/
 .. _GNUPLOT: http://www.gnuplot.info/
-.. _3: http://www.eumedgrid.eu/
+.. _1: http://www.eumedgrid.eu/
+.. _2: https://sgw.africa-grid.org
 
 The Center for Atmospheric Research (CAR_) is an activity Centre of the Nigerian National Space Research and Development Agency, NASRDA_, committed to research and capacity building in the atmospheric and related sciences. 
 
@@ -30,11 +31,11 @@ At moment TRODAN equipment include atmospheric monitoring facilities such as Aut
 
 GNUPLOT_ is the portable command-line driven graphing utility for Linux, OS/2, MS Windows, OSX, VMS, and many other platforms used to visualize the Trodan Data Repository.
 
-** Conditions of Use of the TRODAN data **
+**Conditions of Use of the TRODAN data**
 
 The data made available by CAR are provided for research use and are not for commercial use or sale or distribution to third parties without the written permission of the Centre. Publications including theses making use of the data should include an acknowledgment statement of the form given below. A citation reference should be sent to the TRODAN Project Manager (trodan@carnasrda.com) for inclusion in a publications list on the TRODAN website. 
 
-** Disclaimer **
+**Disclaimer**
 
 CAR-NASRDA accepts no liability for the use or transmission of this data.
 
@@ -73,7 +74,7 @@ As soon as the portlet has been successfully deployed on the Science Gateway the
 
 **Serial Number**: The MD5SUM of the robot certificate to be used for this e-Infrastructure;
 
-In the following figure is shown how the portlet has been configured to run simulation on the EUMEDGRIDSupport e-Infrastructure [3_].
+In the following figure is shown how the portlet has been configured to run simulation on the EUMEDGRIDSupport e-Infrastructure [1_].
 
 .. image:: images/TRODAN_settings1.jpg
    :align: center
@@ -101,15 +102,30 @@ In the figure below is shown how the application settings have been configured t
 Usage
 ============
 
-To run the PoC the user has to click on the *third* accordion of the portlet and start the analysis as shown in the below figure:
+To run the PoC the user has to click on the *third* accordion of the portlet and 
 
-.. image:: images/TRODAN_inputs.jpg
+- select the Meteorological station(s) to analyze as shown in the below figure:
+
+.. image:: images/TRODAN_inputs1.jpg
       :align: center
 
-The WRF simulation refers to a region in Africa and to a period of two days:
+- select the Meteorological Pattern(s) to analyze as shown in the below figure:
 
-.. image:: images/TRODAN_results.jpg
-      :align: center
+.. image:: images/TRODAN_input2.jpg
+   :align: center
+
+- click on *Advanced plot options* and the *Date* range and *Plot Option* as shown in the below figure:
+
+.. image:: images/TRODAN_input3.jpg
+   :align: center
+
+Each simulation will produce:
+
+- *std.txt*: the standard output file;
+
+- *std.err*: the standard error file;
+
+A graphical representation ofthe Meteorological Patters generated with GNUPLOT_ in PDF format.
 
 ============
 Support
