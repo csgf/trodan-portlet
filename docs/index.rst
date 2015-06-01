@@ -126,6 +126,7 @@ Each simulation will produce:
 - *std.err*: the standard error file;
 
 A graphical representation ofthe Meteorological Patters generated with GNUPLOT_ in PDF format.
+Some typical results are shown below:
 
 ============
 Support
