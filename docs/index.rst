@@ -6,7 +6,7 @@ TRODAN v1.0.3 Docs
 About
 ============
 
-.. image:: images/TRODAN_logo.jpeg
+.. image:: images/TRODAN_logo.png
    :width: 400px
    :align: left
 -------------
