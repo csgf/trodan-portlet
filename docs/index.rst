@@ -147,11 +147,11 @@ Here follows a graphical representation of the following Meteorological Patters 
 - WindSpeed_ 
 
 ============
-Contact
+Contributor(s)
 ============
 Please feel free to contact us any time if you have any questions or comments.
 
 :Authors:
  
- `TRODAN Project Manager <mailto:trodan@carnasrda.com>`_ 
+ TRODAN Project Manager 
  
