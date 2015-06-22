@@ -1,5 +1,5 @@
 *********************
-TRODAN Docs
+TRODAN
 *********************
 
 ============
@@ -147,7 +147,7 @@ Here follows a graphical representation of the following Meteorological Patters 
 - WindSpeed_ 
 
 ============
-Support
+Contact
 ============
 Please feel free to contact us any time if you have any questions or comments.
 
@@ -155,6 +155,3 @@ Please feel free to contact us any time if you have any questions or comments.
  
  `TRODAN Project Manager <mailto:trodan@carnasrda.com>`_ 
  
-:Version: v1.0.3, 2015
-
-:Date: June 1st, 2015 14:43
