@@ -194,9 +194,9 @@ limitations under the License.
      font-family: Tahoma,Verdana,sans-serif,Arial; 
      font-size: 14px;">
     
-    <div>TRODAN Data Repository Visualization ~ ver. 1.0.3</div>
-    <div>Istituto Nazionale di Fisica Nucleare (INFN), Copyright © 2014</div>
-    <div>All rights reserved</div>
+    <div>TRODAN Data Repository Visualization ~ ver. 1.0.4</div>
+    <div>The Italian National Institute of Nuclear Physics (INFN), division of Catania, Italy</div>
+    <div>Copyright © 2014 - 2015. All rights reserved</div>
     <div>This work has been partially supported by
         <a href="http://ei4africa.eu/">
             <img width="90" 

@@ -35,7 +35,7 @@ limitations under the License.
 
 <%
   //
-  // TRODAN 1.0.3 portlet preferences for the GridEngine interaction
+  // TRODAN 1.0.4 portlet preferences for the GridEngine interaction
   //
   // These parameters are:  
   // o *_trodan_INFRASTRUCTURE  - The Infrastructure Acronym to be enabled

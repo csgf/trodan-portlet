@@ -470,6 +470,9 @@ public class Trodan extends GenericPortlet {
         // Getting the SENDER_MAIL from the portlet preferences
         String SENDER_MAIL = portletPreferences.getValue("SENDER_MAIL", "N/A");
         
+        // List of TRODAN stations for the EUMED VO
+        List<String> stations = null;
+        
         if (cometa_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
         {
             infras[0]="cometa";
@@ -610,7 +613,6 @@ public class Trodan extends GenericPortlet {
         if (eumed_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
         {
             infras[2]="eumed";
-            List<String> stations = new ArrayList<String>();            
             
             // Getting the TRODAN INFRASTRUCTURE from the portlet preferences for the EUMED VO
             String eumed_trodan_INFRASTRUCTURE = portletPreferences.getValue("eumed_trodan_INFRASTRUCTURE", "N/A");
@@ -804,7 +806,10 @@ public class Trodan extends GenericPortlet {
         List<String> CEs_list_cometa = null;        
         List<String> CEs_list_gridit = null;        
         List<String> CEs_list_eumed = null;
-        List<String> CEs_list_biomed = null;        
+        List<String> CEs_list_biomed = null;
+        
+        List<String> CEs_list_TOT = new ArrayList<String>();
+        List<String> CEs_queue_TOT = new ArrayList<String>();
         
         BDII bdii = null;
 
@@ -866,7 +871,7 @@ public class Trodan extends GenericPortlet {
                 }
                 
                 // Merging the list of CEs and queues
-                List<String> CEs_list_TOT = new ArrayList<String>();
+                //List<String> CEs_list_TOT = new ArrayList<String>();
                 if (cometa_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
                         CEs_list_TOT.addAll(CEs_list_cometa);
                 if (gridit_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
@@ -876,7 +881,7 @@ public class Trodan extends GenericPortlet {
                 if (biomed_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
                         CEs_list_TOT.addAll(CEs_list_biomed);
                 
-                List<String> CEs_queue_TOT = new ArrayList<String>();
+                //List<String> CEs_queue_TOT = new ArrayList<String>();
                 if (cometa_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
                     CEs_queue_TOT.addAll(CEqueues_cometa);
                 if (gridit_trodan_ENABLEINFRASTRUCTURE.equals("checked"))
@@ -891,22 +896,22 @@ public class Trodan extends GenericPortlet {
                 //            CLASS USING THE EMPTY CONSTRUCTOR WHEN
                 //            WHEN THE PORTLET IS DEPLOYED IN PRODUCTION!!!
                 //=========================================================
-                UsersTrackingDBInterface DBInterface =
+                /*UsersTrackingDBInterface DBInterface =
                         new UsersTrackingDBInterface(
                                 TRACKING_DB_HOSTNAME.trim(),
                                 TRACKING_DB_USERNAME.trim(),
-                                TRACKING_DB_PASSWORD.trim());
+                                TRACKING_DB_PASSWORD.trim());*/
                 
-                /*UsersTrackingDBInterface DBInterface =
-                        new UsersTrackingDBInterface();*/
+                UsersTrackingDBInterface DBInterface =
+                        new UsersTrackingDBInterface();
                     
                 if ( (CEs_list_TOT != null) && (!CEs_list_TOT.isEmpty()) )
                 {
                     log.info("NOT EMPTY LIST!");
-                    // Fetching the list of CEs publushing the SW
+                    // Fetching the list of CEs publishing the SW
                     for (String CE:CEs_list_TOT) 
                     {
-                        log.info("Fetching the CE="+CE);
+                        log.info("Fetching the CE = " +CE);
                         Properties coordinates = new Properties();
                         Properties queue = new Properties();
 
@@ -930,8 +935,13 @@ public class Trodan extends GenericPortlet {
                         // Saving the queue in a Java HashMap
                         GPS_queue.put(CE, queue);
                     }
-                } else log.info ("EMPTY LIST!");
+                } else { log.info ("EMPTY LIST!");
+                         stations = new ArrayList<String>();
+                         stations.add("N/A");                         
+                         request.setAttribute("trodan_STATIONS", stations); 
+                }
              } catch (URISyntaxException ex) {
+                 
                Logger.getLogger(Trodan.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NamingException e) {}
 
@@ -959,8 +969,7 @@ public class Trodan extends GenericPortlet {
             request.setAttribute ("GPS_table", gson.toJson(GPS_table));
             request.setAttribute ("GPS_queue", gson.toJson(GPS_queue));
 
-            // ********************************************************
-            dispatcher = getPortletContext().getRequestDispatcher("/view.jsp");       
+            dispatcher = getPortletContext().getRequestDispatcher("/view.jsp");
             dispatcher.include(request, response);
     }
 
@@ -1979,13 +1988,13 @@ public class Trodan extends GenericPortlet {
             //            CLASS USING THE EMPTY CONSTRUCTOR WHEN
             //            WHEN THE PORTLET IS DEPLOYED IN PRODUCTION!!!
             //=============================================================
-            MultiInfrastructureJobSubmission TrodanMultiJobSubmission =
+            /*MultiInfrastructureJobSubmission TrodanMultiJobSubmission =
             new MultiInfrastructureJobSubmission(TRACKING_DB_HOSTNAME,
                                                  TRACKING_DB_USERNAME,
-                                                 TRACKING_DB_PASSWORD);
+                                                 TRACKING_DB_PASSWORD);*/
             
-            /*MultiInfrastructureJobSubmission TrodanMultiJobSubmission =
-                new MultiInfrastructureJobSubmission();*/
+            MultiInfrastructureJobSubmission TrodanMultiJobSubmission =
+                new MultiInfrastructureJobSubmission();
 
             // Set the list of infrastructure(s) activated for the portlet           
             if (infrastructures[0]!=null) {

@@ -417,7 +417,9 @@ limitations under the License.
         
         if (found==0) { 
             console.log ("None of the grid infrastructures have been configured!");
-            $("#error_infrastructure img:last-child").remove();            
+            $("#error_infrastructure img:last-child").remove();
+            $('#error_infrastructure')
+            .append("<img width='35' src='<%= renderRequest.getContextPath()%>/images/Warning.png' border='0'> None of the available grid infrastructures have been configured!");
         }
         
         var accOpts = {
@@ -1347,9 +1349,9 @@ For further information, please refer to the output.README file produced during 
 </form>                                                                         
 
 <div id="trodan_footer" style="width:690px; font-family: Tahoma,Verdana,sans-serif,Arial; font-size: 14px;">
-    <div>TRODAN Data Repository Visualization ~ ver. 1.0.3</div>
-    <div>Istituto Nazionale di Fisica Nucleare (INFN), Copyright © 2014</div>
-    <div>All rights reserved</div>
+    <div>TRODAN Data Repository Visualization ~ ver. 1.0.4</div>
+    <div>The Italian National Institute of Nuclear Physics (INFN), division of Catania, Italy</div>
+    <div>Copyright © 2014 - 2015. All rights reserved</div>
     <div>This work has been partially supported by
         <a href="http://ei4africa.eu/">
             <img width="90" 
